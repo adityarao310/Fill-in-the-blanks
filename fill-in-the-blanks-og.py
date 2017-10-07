@@ -41,10 +41,6 @@ __9__, and __10__ allow __4__s of the __1__ to be compared
 correctHard = ["class", "method", "answer", "answer", "answer", "answer", "answer", "answer", "answer", "answer"]
 blanksHard = 10
 
-textEasyMediumHard = [textEasy, textMedium, textHard]
-correctEastMediumHard = [correctEasy, correctMedium, correctHard]
-blanksEasyMediumHard = [blanksEasy, blanksMedium, blanksHard]
-
 # function to print helpful text when game starts based on difficulty level
 def startingText(levelName, levelText):
     print "You've chosen " + levelName + "!" + "\n"
