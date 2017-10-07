@@ -46,21 +46,10 @@ def startingText(levelName, levelText):
     print "\n"
 
 # function to print wrong answer help text on screen
-def wrongText(triesLeft, levelTextCurrent):
+def wrongText(triesLeft, levelText):
     print "That isn't the correct answer!  Let's try again; you have " + str(triesLeft) + " tries left!" "\n" "\n"
     print "The current paragraph reads as such:" "\n"
-    print levelTextCurrent
-    print "\n"
-
-# function to print correct answer help text on screen
-def correctText(levelTextCurrent, blank, answer):
-    print "Correct!" "\n" "\n"
-    print "The current paragraph reads as such:" "\n"
-    # function which fills in the blank sequentially
-    def fillBlank(text, toReplace, withNew):
-        newText = text.replace(toReplace, withNew)
-        return newText
-    print fillBlank(levelTextCurrent, blank, answer)
+    print levelText
     print "\n"
 
 # function which asks for user input
@@ -68,7 +57,17 @@ def userInput(blankNumber):
     value = raw_input("What should be substituted in for __" + str(blankNumber + 1) + "__?" "\n").lower()
     return value
 
+# function to print correct answer help text on screen
+def correctText():
+    print "Correct! Correct! Correct!" "\n" "\n"
+    print "The current paragraph reads as such:" "\n"
 
+# function which fills in the blank sequentially
+def fillBlank(text, toReplace, withNew):
+    newText = text.replace(toReplace, withNew)
+    print newText
+    print "\n"
+    return newText
 
 ##############################################################################
 # game starts
@@ -87,7 +86,8 @@ if userLevel in levels:
             wrongText(attempts,textMedium)
             user0 = userInput(0)
         if  user0 == correctMedium[0]:
-            correctText(textMedium, "__1__", user0)
+            correctText()
+            textMedium = fillBlank(textMedium, "__1__", user0)
 
         # get input for 2nd blank
         user1 = userInput(1)
@@ -95,7 +95,8 @@ if userLevel in levels:
             wrongText(attempts,textMedium)
             user1 = userInput(1)
         if  user1 == correctMedium[1]:
-            textMedium = correctText(textMedium, "__2__", user1)
+            correctText()
+            textMedium = fillBlank(textMedium, "__2__", user1)
 
 
 # if user inputs unknown level
