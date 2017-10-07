@@ -1,4 +1,5 @@
-##############################################################################
+import sys
+
 # define all variables of the game here
 levels = ["easy", "medium", "hard"]
 attempts = 5
@@ -15,6 +16,7 @@ It may seem a bit odd to do something in a Turing complete language that
 can be done even more easily with an __4__ file in a browser, but it's
 a step in learning __2__ syntax, and that's really its purpose.'''
 correctEasy = ["world", "python", "print", "html"]
+blanksEasy = 4
 
 textMedium = '''A __1__ is created with the def keyword.  You specify the inputs
 a __1__ takes by adding __2__ separated by commas between the parentheses.
@@ -22,6 +24,7 @@ __1__s by default returns __3__ if you don't specify the value to retrun. __2__
 can be standard data types such as string, integer, dictionary, tuple, and __4__
 or can be more complicated such as objects and lambda functions.'''
 correctMedium = ["function", "arguments", "none", "list"]
+blanksMedium = 4
 
 textHard = '''When you create a __1__, certain __2__s are automatically
 generated for you if you don't make them manually. These contain multiple
@@ -36,6 +39,7 @@ allow + and - to be used by __4__s of the __1__.  Similarly, __8__,
 __9__, and __10__ allow __4__s of the __1__ to be compared
 (with <, >, and ==).'''
 correctHard = ["class", "method", "answer", "answer", "answer", "answer", "answer", "answer", "answer", "answer"]
+blankshard = 10
 
 # function to print helpful text when game starts based on difficulty level
 def startingText(levelName, levelText):
@@ -47,7 +51,7 @@ def startingText(levelName, levelText):
 
 # function to print wrong answer help text on screen
 def wrongText(triesLeft, levelText):
-    print "That isn't the correct answer!  Let's try again; you have " + str(triesLeft) + " tries left!" "\n" "\n"
+    print "That isn't the correct answer!  Let's try again; you have " + str(triesLeft-1) + " tries left!" "\n" "\n"
     print "The current paragraph reads as such:" "\n"
     print levelText
     print "\n"
@@ -80,26 +84,28 @@ if userLevel in levels:
         # print starting text for that difficulty level
         startingText(userLevel, textMedium)
 
-        # get input for 1st blank
-        user0 = userInput(0)
-        while (user0 != correctMedium[0]):
-            wrongText(attempts,textMedium)
-            user0 = userInput(0)
-        if  user0 == correctMedium[0]:
-            correctText()
-            textMedium = fillBlank(textMedium, "__1__", user0)
-
-        # get input for 2nd blank
-        user1 = userInput(1)
-        while (user1 != correctMedium[1]):
-            wrongText(attempts,textMedium)
-            user1 = userInput(1)
-        if  user1 == correctMedium[1]:
-            correctText()
-            textMedium = fillBlank(textMedium, "__2__", user1)
-
+        i = 0
+        while (i < blanksMedium):
+            # get inputs
+            userI = userInput(i)
+            while (userI != correctMedium[i]):
+                wrongText(attempts,textMedium)
+                attempts -= 1
+                if (attempts == 0):
+                    print "Game over! You did not finish in 5 straight tries."
+                    sys.exit()
+                userI = userInput(i)
+            if  userI == correctMedium[i]:
+                correctText()
+                replaceBlank = "__" + str(i+1) + "__"
+                textMedium = fillBlank(textMedium, replaceBlank, userI)
+                i += 1
+                attempts = 5
+        if (i == blanksMedium):
+            print "You won!"
 
 # if user inputs unknown level
 else:
     print "That's not an option!"
     print "Please select a game difficulty by typing it in!"
+    userLevel = raw_input("Possible choices include easy, medium, and hard.\n").lower()
