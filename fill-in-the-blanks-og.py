@@ -2,7 +2,7 @@ import sys
 
 # define all variables of the game here
 levels = ["easy", "medium", "hard"]
-attempts = 5
+maxAttempts = 5
 
 textEasy = '''A common first thing to do in a language is display
 'Hello __1__!'  In __2__ this is particularly easy; all you have to do
@@ -42,6 +42,7 @@ correctHard = ["class", "method", "answer", "answer", "answer", "answer", "answe
 blanksHard = 10
 
 # function to print helpful text when game starts based on difficulty level
+# takes input of which level user has chosen and predefined fill blanks text
 def startingText(levelName, levelText):
     print "You've chosen " + levelName + "!" + "\n"
     print "You will get 5 guesses per problem" "\n"
@@ -50,6 +51,7 @@ def startingText(levelName, levelText):
     print "\n"
 
 # function to print wrong answer help text on screen
+# takes input of how many tries are left and predefined fill blanks text
 def wrongText(triesLeft, levelText):
     print "That isn't the correct answer!  Let's try again; you have " + str(triesLeft-1) + " tries left!" "\n" "\n"
     print "The current paragraph reads as such:" "\n"
@@ -57,100 +59,67 @@ def wrongText(triesLeft, levelText):
     print "\n"
 
 # function which asks for user input
+# takes input of which blank number is currently being filled
+# retuns the user input which can be used programtically
 def userInput(blankNumber):
-    value = raw_input("What should be substituted in for __" + str(blankNumber + 1) + "__?" "\n").lower()
+    value = raw_input("What should be substituted in for __" + str(blankNumber + 1) + "__?\n").lower()
     return value
 
 # function to print correct answer help text on screen
 def correctText():
-    print "Correct! Correct! Correct!" "\n" "\n"
-    print "The current paragraph reads as such:" "\n"
+    print "Correct! Correct! Correct!\n \n"
+    print "The current paragraph reads as such:\n"
 
 # function which fills in the blank sequentially
+# takes input of paragraph text and replaces current blank with correct answer
+# returns the replaced text to be used in next iteration
 def fillBlank(text, toReplace, withNew):
     newText = text.replace(toReplace, withNew)
     print newText
     print "\n"
     return newText
 
+# function to run the block of code of starting game for each level chosen. Inputs:
+# The phrase that should be filled;
+# A list with answers that should be verified and compared;
+# The number of blanks that should be filled;
+def runBlock(levelName, levelText, levelCorrectAnswers, levelBlanks):
+    startingText(levelName, levelText) # print starting text for that level
+    i = 0
+    while (i < levelBlanks): # gets user inputs and stores it
+        userI = userInput(i)
+        attempts = maxAttempts
+        while (userI != levelCorrectAnswers[i]): # check input w/ correct answers
+            wrongText(attempts,levelText)
+            attempts -= 1
+            if (attempts == 0):
+                print "You've failed too many straight guesses! Game over!"
+                sys.exit()
+            userI = userInput(i)
+        correctText()
+        replaceBlank = "__" + str(i+1) + "__"
+        levelText = fillBlank(levelText, replaceBlank, userI)
+        i+= 1
+        attempts = maxAttempts #reshuffle the attempts number for next blank
+    print "You won!"
 ##############################################################################
 # game starts and asks for level from user
 print "Choose the right option."
-print "Please select a game difficulty by typing it in!" "\n""\n"
+print "Please select a game difficulty by typing it in! \n \n"
 userLevel = raw_input("Possible choices include easy, medium, and hard.\n").lower()
 
 # if user inputs unknown level
-while userLevel!= (levels[0] or levels[1] or levels[2]) :
+while userLevel not in levels:
     print "Please choose only from 3 possible levels!"
-    print "Please select a game difficulty by typing it in!" "\n""\n"
+    print "Please select a game difficulty by typing it in! \n \n"
     userLevel = raw_input("Possible choices include easy, medium, and hard.\n").lower()
 
 # check and proceed for difficulty level choosen by user
 if userLevel == levels[0]:
-    startingText(userLevel, textEasy) # print starting text for that level
-    i = 0
-    while (i < blanksEasy):
-        userI = userInput(i) # gets user inputs and stores it
-        while (userI != correctEasy[i]): # check user input with correct answers
-            wrongText(attempts,textEasy)
-            attempts -= 1
-            if (attempts == 0):
-                print "You've failed too many straight guesses! Game over!"
-                sys.exit()
-            userI = userInput(i)
-        if  userI == correctEasy[i]:
-            correctText()
-            replaceBlank = "__" + str(i+1) + "__"
-            textEasy = fillBlank(textEasy, replaceBlank, userI)
-            i += 1
-            attempts = 5 #reshuffle the attempts number for next blank
-    if (i == blanksEasy):
-        print "You won!"
+    runBlock(userLevel, textEasy, ["world", "python", "print", "html"], blanksEasy)
 
 elif userLevel == levels[1]:
-    # print starting text for that difficulty level
-    startingText(userLevel, textMedium)
-    i = 0
-    while (i < blanksMedium):
-        # gets user inputs and stores it
-        userI = userInput(i)
-        # check user input with correct answers
-        while (userI != correctMedium[i]):
-            wrongText(attempts,textMedium)
-            attempts -= 1
-            if (attempts == 0):
-                print "You've failed too many straight guesses! Game over!"
-                sys.exit()
-            userI = userInput(i)
-        if  userI == correctMedium[i]:
-            correctText()
-            replaceBlank = "__" + str(i+1) + "__"
-            textMedium = fillBlank(textMedium, replaceBlank, userI)
-            i += 1
-            attempts = 5 #reshuffle the attempts number for next blank
-    if (i == blanksMedium):
-        print "You won!"
+    runBlock(userLevel, textMedium, ["function", "arguments", "none", "list"], blanksMedium)
 
 elif userLevel == levels[2]:
-    # print starting text for that difficulty level
-    startingText(userLevel, textHard)
-    i = 0
-    while (i < blanksHard):
-        # gets user inputs and stores it
-        userI = userInput(i)
-        # check user input with correct answers
-        while (userI != correctHard[i]):
-            wrongText(attempts,textHard)
-            attempts -= 1
-            if (attempts == 0):
-                print "You've failed too many straight guesses! Game over!"
-                sys.exit()
-            userI = userInput(i)
-        if  userI == correctHard[i]:
-            correctText()
-            replaceBlank = "__" + str(i+1) + "__"
-            textHard = fillBlank(textHard, replaceBlank, userI)
-            i += 1
-            attempts = 5 #reshuffle the attempts number for next blank
-    if (i == blanksHard):
-        print "You won!"
+    runBlock(userLevel, textHard, ["class", "method", "answer", "answer", "answer", "answer", "answer", "answer", "answer", "answer"], blanksHard)
