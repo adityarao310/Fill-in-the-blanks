@@ -7,4 +7,8 @@
 - You can choose a difficulty level to begin with and you will get 5 tries per question 
 - Each question will ask you to fill one of the blanks in the text 
 
+**Please note--> the hard level has dummy "answer" for each blank starting from the 3rd blank. If you know all the answers, please do let me know :)
+
 Enjoy!
+
+
